@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: copy-data-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: copy-data-container
+        image: gcr.io/google-containers/gsutil
+        command: ["gsutil", "cp", "gs://your-google-cloud-storage-bucket/object-name", "/data/input"]
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      restartPolicy: Never
+      volumes:
+      - name: data-volume
+        emptyDir: {}

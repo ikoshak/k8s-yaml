@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-container-deployment
+spec:
+  selector:
+    matchLabels:
+      app: multi-container-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: multi-container-app
+    spec:
+      volumes:
+      - name: html-volume
+        emptyDir: {}
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      - name: debian
+        image: debian
+        volumeMounts:
+        - name: html-volume
+          mountPath: /html
+        command: ["/bin/bash", "-c"]
+        args:
+        - echo "$(date)" >> /html/index.html
